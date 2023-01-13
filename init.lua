@@ -5,18 +5,17 @@ else
     S = function(s,a,...)a={a,...}return s:gsub("@(%d+)",function(n)return a[tonumber(n)]end)end
 end
 
-local function jr_set_livery(self, puncher, itemstack,data)
+local function loco_set_livery(self, puncher, itemstack,data)
 		-- Get color data
 	local meta = itemstack:get_meta()
 	local color = meta:get_string("paint_color")
-	local alpha = tonumber(meta:get_string("alpha"))
 	if color and color:find("^#%x%x%x%x%x%x$") then
-		data.livery = self.base_texture.."^("..self.base_livery.."^[colorize:"..color..":"..alpha..")" -- livery texture has no own texture....
+		data.livery = self.base_texture.."^("..self.base_livery.."^[multiply:"..color..")" -- livery texture has no own texture....
 		self:set_textures(data)
 	end
 end
 
-local function	jr_set_textures(self, data)
+local function	loco_set_textures(self, data)
 	if data.livery then
 		self.object:set_properties({
 				textures={data.livery}
@@ -63,8 +62,8 @@ advtrains.register_wagon("diesel_lokomotive", {
 	collisionbox = {-1.0,-0.5,-1.0, 1.0,2.5,1.0},
 	base_texture = "advtrains_engine_diesel.png",
 	base_livery = "advtrains_engine_diesel_livery.png",
-	set_textures = jr_set_textures,
-	set_livery = jr_set_livery,
+	set_textures = loco_set_textures,
+	set_livery = loco_set_livery,
 	update_animation=function(self, velocity)
 		if self.old_anim_velocity~=advtrains.abs_ceil(velocity) then
 			self.object:set_animation({x=1,y=80}, advtrains.abs_ceil(velocity)*15, 0, true)
@@ -100,6 +99,7 @@ advtrains.register_wagon("diesel_lokomotive", {
 	end,
 	drops={"advtrains:diesel_lokomotive"},
 	horn_sound = "advtrains_engine_diesel_horn",
+	glow = 1
 }, S("Diesel Engine"), "advtrains_engine_diesel_inv.png")
 
 advtrains.register_wagon("wagon_gravel", {
